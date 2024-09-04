@@ -11,7 +11,7 @@ ARG BUILD_TAGS="muslc"
 
 RUN apk add --no-cache --update openssh git make build-base linux-headers libc-dev \
                                 pkgconfig zeromq-dev musl-dev alpine-sdk libsodium-dev \
-                                libzmq-static libsodium-static gcc
+                                libzmq-static libsodium-static gcc gcc-aarch64-linux-gnu
 
 # Build
 WORKDIR /go/src/github.com/babylonlabs-io/vigilante
@@ -26,7 +26,6 @@ RUN if [ -n "${VERSION}" ]; then \
     fi
 
 RUN echo $BUILDPLATFORM
-RUN uname -m
 # Cosmwasm - Download correct libwasmvm version
 RUN WASMVM_VERSION=$(go list -m github.com/CosmWasm/wasmvm/v2 | cut -d ' ' -f 2) && \
     wget https://github.com/CosmWasm/wasmvm/releases/download/$WASMVM_VERSION/libwasmvm_muslc.$(uname -m).a \
