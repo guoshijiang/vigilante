@@ -1,9 +1,8 @@
 ## Image for building
-FROM golang:1.23-alpine AS build-env
+FROM --platform=$BUILDPLATFORM golang:1.23-alpine AS build-env
 
 
-# TARGETPLATFORM should be one of linux/amd64 or linux/arm64.
-ARG TARGETPLATFORM="linux/amd64"
+ARG TARGETOS TARGETARCH
 # Version to build. Default is empty.
 ARG VERSION
 
@@ -26,6 +25,8 @@ RUN if [ -n "${VERSION}" ]; then \
         git checkout -f ${VERSION}; \
     fi
 
+RUN echo $BUILDPLATFORM
+RUN uname -m
 # Cosmwasm - Download correct libwasmvm version
 RUN WASMVM_VERSION=$(go list -m github.com/CosmWasm/wasmvm/v2 | cut -d ' ' -f 2) && \
     wget https://github.com/CosmWasm/wasmvm/releases/download/$WASMVM_VERSION/libwasmvm_muslc.$(uname -m).a \
@@ -38,6 +39,8 @@ RUN CGO_LDFLAGS="$CGO_LDFLAGS -lstdc++ -lm -lsodium" \
     CGO_ENABLED=1 \
     BUILD_TAGS=$BUILD_TAGS \
     LINK_STATICALLY=true \
+    GOOS=${TARGETOS} \
+    GOARCH=${TARGETARCH} \
     make build
 
 FROM alpine:3.16 AS run
