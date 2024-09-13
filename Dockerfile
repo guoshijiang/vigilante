@@ -1,8 +1,7 @@
 ## Image for building
-FROM --platform=$BUILDPLATFORM golang:1.23-alpine AS build-env
+FROM golang:1.23-alpine AS build-env
 
 
-ARG TARGETOS TARGETARCH
 # Version to build. Default is empty.
 ARG VERSION
 
@@ -38,8 +37,6 @@ RUN CGO_LDFLAGS="$CGO_LDFLAGS -lstdc++ -lm -lsodium" \
     CGO_ENABLED=1 \
     BUILD_TAGS=$BUILD_TAGS \
     LINK_STATICALLY=true \
-    GOOS=${TARGETOS} \
-    GOARCH=${TARGETARCH} \
     make build
 
 FROM alpine:3.16 AS run
