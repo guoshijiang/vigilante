@@ -1,6 +1,9 @@
 name: ci
 
 on:
+  push:
+    branches:
+    - 'hiep/update-pipeline-version'
   pull_request:
     branches:
     - '**'
