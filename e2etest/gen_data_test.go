@@ -201,7 +201,7 @@ func TestXxx(t *testing.T) {
 	fmt.Println(fpResp)
 	fmt.Println(err)
 
-	numStakers := 10
+	numStakers := 50
 
 	var stakers []*BTCStaker
 	for i := 0; i < numStakers; i++ {

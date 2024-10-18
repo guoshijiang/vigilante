@@ -6,14 +6,17 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"os"
+	"path/filepath"
+	"sync"
+	"testing"
+	"time"
+
 	"github.com/babylonlabs-io/vigilante/e2etest/container"
+	"github.com/btcsuite/btcd/btcjson"
 	"github.com/btcsuite/btcd/txscript"
 	pv "github.com/cosmos/relayer/v2/relayer/provider"
 	"go.uber.org/zap"
-	"os"
-	"path/filepath"
-	"testing"
-	"time"
 
 	bbnclient "github.com/babylonlabs-io/babylon/client/client"
 	bbn "github.com/babylonlabs-io/babylon/types"
@@ -61,6 +64,7 @@ type TestManager struct {
 	Config          *config.Config
 	WalletPrivKey   *btcec.PrivateKey
 	manger          *container.Manager
+	mu              sync.Mutex
 }
 
 func initBTCClientWithSubscriber(t *testing.T, cfg *config.Config) *btcclient.Client {
@@ -288,4 +292,40 @@ func tempDir(t *testing.T) (string, error) {
 	})
 
 	return tempPath, err
+}
+
+func (tm *TestManager) AtomicFundSignSendStakingTx(t *testing.T, stakingOutput *wire.TxOut) (*wire.MsgTx, *chainhash.Hash) {
+	tm.mu.Lock()
+	defer tm.mu.Unlock()
+	// 	1 sat/vB
+	// = 1 sat/vB × 1000 vB/kvB
+	// = 1000 sat/kvB × 1/100'000'000 ₿/sat
+	// = 103 × 10-8 ₿/kvB
+	// = 10-5 ₿/kvB
+	// = 1 / 100'000 ₿/kvB
+
+	feeRate := float64(0.00002)
+	pos := 1
+	// isWitness := true
+
+	err := tm.TestRpcClient.WalletPassphrase("pass", 60)
+	require.NoError(t, err)
+
+	tx := wire.NewMsgTx(2)
+	tx.AddTxOut(stakingOutput)
+
+	rawTxResult, err := tm.TestRpcClient.FundRawTransaction(tx, btcjson.FundRawTransactionOpts{
+		FeeRate:        &feeRate,
+		ChangePosition: &pos,
+	}, nil)
+	require.NoError(t, err)
+
+	signed, all, err := tm.TestRpcClient.SignRawTransactionWithWallet(rawTxResult.Transaction)
+	require.NoError(t, err)
+	require.True(t, all)
+
+	txHash, err := tm.TestRpcClient.SendRawTransaction(signed, true)
+	require.NoError(t, err)
+
+	return rawTxResult.Transaction, txHash
 }

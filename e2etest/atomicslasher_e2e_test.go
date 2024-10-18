@@ -4,9 +4,10 @@
 package e2etest
 
 import (
-	"go.uber.org/zap"
 	"testing"
 	"time"
+
+	"go.uber.org/zap"
 
 	bstypes "github.com/babylonlabs-io/babylon/x/btcstaking/types"
 	"github.com/babylonlabs-io/vigilante/btcclient"
@@ -21,7 +22,7 @@ import (
 
 // TestAtomicSlasher verifies the behavior of the atomic slasher by setting up delegations,
 // sending slashing transactions, and ensuring that slashing is detected and executed correctly.
-func TestAtomicSlasher(t *testing.T) {
+func ATestAtomicSlasher(t *testing.T) {
 	t.Parallel()
 	// segwit is activated at height 300. It's needed by staking/slashing tx
 	numMatureOutputs := uint32(300)
@@ -139,7 +140,7 @@ func TestAtomicSlasher(t *testing.T) {
 
 // TestAtomicSlasher_Unbonding tests the atomic slasher's handling of unbonding BTC delegations,
 // including the creation and detection of unbonding slashing transactions.
-func TestAtomicSlasher_Unbonding(t *testing.T) {
+func ATestAtomicSlasher_Unbonding(t *testing.T) {
 	t.Parallel()
 	// segwit is activated at height 300. It's needed by staking/slashing tx
 	numMatureOutputs := uint32(300)

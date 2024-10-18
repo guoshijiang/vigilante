@@ -4,13 +4,14 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	bbn "github.com/babylonlabs-io/babylon/types"
-	"github.com/babylonlabs-io/vigilante/testutil"
-	"github.com/btcsuite/btcd/btcec/v2"
 	"regexp"
 	"strconv"
 	"testing"
 	"time"
+
+	bbn "github.com/babylonlabs-io/babylon/types"
+	"github.com/babylonlabs-io/vigilante/testutil"
+	"github.com/btcsuite/btcd/btcec/v2"
 
 	"github.com/ory/dockertest/v3"
 	"github.com/ory/dockertest/v3/docker"
@@ -26,6 +27,9 @@ var (
 	_, covenantPK = btcec.PrivKeyFromBytes(
 		[]byte{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
 	)
+
+	CovnentPrivKey, _ = btcec.NewPrivateKey()
+	CovnentPubKey     = CovnentPrivKey.PubKey()
 )
 
 var errRegex = regexp.MustCompile(`(E|e)rror`)
@@ -195,7 +199,7 @@ func (m *Manager) RunBabylondResource(
 				"--min-staking-time-blocks=200 --min-staking-amount-sat=10000 "+
 				"--epoch-interval=%d --slashing-pk-script=%s --btc-base-header=%s "+
 				"--covenant-quorum=1 --covenant-pks=%s && chmod -R 777 /home && babylond start --home=/home/node0/babylond",
-			epochInterval, slashingPkScript, baseHeaderHex, bbn.NewBIP340PubKeyFromBTCPK(covenantPK).MarshalHex()),
+			epochInterval, slashingPkScript, baseHeaderHex, bbn.NewBIP340PubKeyFromBTCPK(CovnentPubKey).MarshalHex()),
 	}
 
 	resource, err := m.pool.RunWithOptions(

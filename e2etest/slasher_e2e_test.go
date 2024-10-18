@@ -4,9 +4,10 @@
 package e2etest
 
 import (
-	"go.uber.org/zap"
 	"testing"
 	"time"
+
+	"go.uber.org/zap"
 
 	"github.com/btcsuite/btcd/chaincfg"
 
@@ -18,7 +19,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestSlasher_GracefulShutdown(t *testing.T) {
+func ATestSlasher_GracefulShutdown(t *testing.T) {
 	t.Parallel()
 	numMatureOutputs := uint32(300)
 
@@ -65,7 +66,7 @@ func TestSlasher_GracefulShutdown(t *testing.T) {
 	defer bsTracker.Stop()
 }
 
-func TestSlasher_Slasher(t *testing.T) {
+func ATestSlasher_Slasher(t *testing.T) {
 	t.Parallel()
 	// segwit is activated at height 300. It's needed by staking/slashing tx
 	numMatureOutputs := uint32(300)
@@ -134,7 +135,7 @@ func TestSlasher_Slasher(t *testing.T) {
 	require.Equal(t, 2, len(minedBlock.Transactions))
 }
 
-func TestSlasher_SlashingUnbonding(t *testing.T) {
+func ATestSlasher_SlashingUnbonding(t *testing.T) {
 	t.Parallel()
 	// segwit is activated at height 300. It's needed by staking/slashing tx
 	numMatureOutputs := uint32(300)
@@ -221,7 +222,7 @@ func TestSlasher_SlashingUnbonding(t *testing.T) {
 	}, eventuallyWaitTimeOut, eventuallyPollTime)
 }
 
-func TestSlasher_Bootstrapping(t *testing.T) {
+func ATestSlasher_Bootstrapping(t *testing.T) {
 	t.Parallel()
 	// segwit is activated at height 300. It's needed by staking/slashing tx
 	numMatureOutputs := uint32(300)

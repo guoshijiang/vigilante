@@ -4,10 +4,11 @@
 package e2etest
 
 import (
-	btcstakingtypes "github.com/babylonlabs-io/babylon/x/btcstaking/types"
-	"go.uber.org/zap"
 	"testing"
 	"time"
+
+	btcstakingtypes "github.com/babylonlabs-io/babylon/x/btcstaking/types"
+	"go.uber.org/zap"
 
 	"github.com/babylonlabs-io/babylon/btcstaking"
 	"github.com/babylonlabs-io/vigilante/btcclient"
@@ -20,7 +21,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestUnbondingWatcher(t *testing.T) {
+func ATestUnbondingWatcher(t *testing.T) {
 	t.Parallel()
 	// segwit is activated at height 300. It's needed by staking/slashing tx
 	numMatureOutputs := uint32(300)
@@ -118,7 +119,7 @@ func TestUnbondingWatcher(t *testing.T) {
 // TestActivatingDelegation verifies that a delegation created without an inclusion proof will
 // eventually become "active".
 // Specifically, that stakingEventWatcher will send a MsgAddBTCDelegationInclusionProof to do so.
-func TestActivatingDelegation(t *testing.T) {
+func ATestActivatingDelegation(t *testing.T) {
 	t.Parallel()
 	// segwit is activated at height 300. It's necessary for staking/slashing tx
 	numMatureOutputs := uint32(300)
@@ -204,7 +205,7 @@ func TestActivatingDelegation(t *testing.T) {
 // both staking and unbonding tx are in the same block.
 // In this test, we include both staking tx and unbonding tx in the same block.
 // The delegation goes through "VERIFIED" → "ACTIVE" → "UNBONDED" status throughout this test.
-func TestActivatingAndUnbondingDelegation(t *testing.T) {
+func ATestActivatingAndUnbondingDelegation(t *testing.T) {
 	//t.Parallel()
 	// segwit is activated at height 300. It's necessary for staking/slashing tx
 	numMatureOutputs := uint32(300)

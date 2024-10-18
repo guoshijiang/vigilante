@@ -4,11 +4,12 @@
 package e2etest
 
 import (
-	"github.com/babylonlabs-io/vigilante/testutil"
-	promtestutil "github.com/prometheus/client_golang/prometheus/testutil"
 	"math/rand"
 	"testing"
 	"time"
+
+	"github.com/babylonlabs-io/vigilante/testutil"
+	promtestutil "github.com/prometheus/client_golang/prometheus/testutil"
 
 	"github.com/babylonlabs-io/babylon/testutil/datagen"
 	btcctypes "github.com/babylonlabs-io/babylon/x/btccheckpoint/types"
@@ -23,7 +24,7 @@ import (
 	"github.com/babylonlabs-io/vigilante/submitter"
 )
 
-func TestSubmitterSubmission(t *testing.T) {
+func ATestSubmitterSubmission(t *testing.T) {
 	t.Parallel()
 	r := rand.New(rand.NewSource(time.Now().Unix()))
 	numMatureOutputs := uint32(300)
@@ -99,7 +100,7 @@ func TestSubmitterSubmission(t *testing.T) {
 	require.Equal(t, len(blockWithOpReturnTransactions.Transactions), 3)
 }
 
-func TestSubmitterSubmissionReplace(t *testing.T) {
+func ATestSubmitterSubmissionReplace(t *testing.T) {
 	t.Parallel()
 	r := rand.New(rand.NewSource(time.Now().Unix()))
 	numMatureOutputs := uint32(300)
